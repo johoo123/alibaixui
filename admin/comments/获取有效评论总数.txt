@@ -1,0 +1,6 @@
+1--获取有效评论总数
+    请求地址:./comments/comTotal.php
+    请求方式:get
+    请求参数:无
+    返回数据格式：json
+        实例:{'total':"447"}

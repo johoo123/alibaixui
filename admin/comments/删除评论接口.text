@@ -1,0 +1,6 @@
+1--获取有效评论总数
+    请求地址:./comments/comDel.php
+    请求方式:get
+    请求参数:id
+    返回数据格式：json
+       

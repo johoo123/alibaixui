@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        .box {
+            
+        }
+        span {
+            float: left;
+            border: 1px solid red;
+            margin: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        span:hover {
+            color: #fff;
+            background-color: red;                     
+        }
+    </style>
+</head>
+<body>
+    <div class="box"></div>
+    <script>
+        //分页标签个数，依赖于后台数据总数，根据总数推算
+        var total = 70;
+        var size = 10;
+        var num = Math.ceil(total/size); //获取分页标签个数
+
+        var str = '';
+
+        str +='<span>上一页</span>';
+
+        for(var i =0;i<num; i++) {
+            str += '<span>'+(i + 1)+'</span>';
+        }
+
+        str +='<span>下一页</span>';
+        document.querySelector('.box').innerHTML = str;
+
+    </script>
+</body>
+</html>

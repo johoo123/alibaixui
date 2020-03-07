@@ -1,0 +1,21 @@
+1-获取评论接口
+    接口地址：/comment/comGet.php
+    请求方式:get
+    请求参数:
+        page页面
+        pageSize 每夜数据条数
+    返回的数据格式：json
+        实例：
+            [
+                {
+                id: "1",
+                author: "武秀英",
+                email: "f.gpcm@ytdsrqkrv.zr",
+                created: "1970-03-15 11:31:50",
+                content: "外影广条同取水权科速工与。矿身面却属次养导务作者用品油调。高石期品极放存斗一号口消别共去。",
+                status: "rejected",
+                post_id: "6",
+                parent_id: "4",
+                title: "达周商公话"
+                },
+            ]

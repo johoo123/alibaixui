@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="./pagination.css">
+    <style> 
+        #box {
+            padding: 50px;
+            height: 200px;
+            border: 1px solid green;
+        }
+    </style>
+</head>
+<body>
+    <!-- 分页的父容器 -->
+    <div id="box"></div>
+    <script src="./jquery-1.12.4.min.js"></script>
+    <script src="./jquery.pagination.js"></script>
+    <script>
+        // 初始化
+        // $('父容器').pagination(总页数, {各种配置});
+        $('#box').pagination(500, {
+            prev_text: '上一页',
+            next_text: '下一页',
+            num_display_entries: 5, // 分页主体个数
+            num_edge_entries: 1, // 首尾页显示个数
+            current_page: 4, // 默认选中的页码
+            load_first_page: false, //在初始化 不执行callback
+            callback: function (index) {
+                alert(index); // 页码的索引值  0
+                // render(index + 1);
+            }
+        });
+    </script>
+</body>
+</html>
