@@ -54,8 +54,8 @@ isLogin();
           <div class="form-group">
             <label for="feature">特色图像</label>
             <!-- show when image chose -->
-            <img class="help-block thumbnail" style="display: none">
-            <input id="feature" class="form-control" name="feature" type="file">
+            <img class="help-block thumbnail" style="display: none" id='img'>
+            <input id="feature" class="form-control" name="feature" accept="image/*" type="file">
           </div>
           <div class="form-group">
             <label for="category">所属分类</label>
@@ -100,6 +100,8 @@ isLogin();
   <script src="../assets/vendors/bootstrap/js/bootstrap.js"></script>
   <!-- 引入template模版文件 -->
   <script src="../assets/vendors/template/template-web.js"></script>
+  <!-- 引入moment -->
+  <script src='../assets/vendors/moment/moment.js'></script>
   <script>NProgress.done()</script>
 
   <script>
@@ -120,7 +122,6 @@ isLogin();
           $('#category').html( template('tmp-cate', {list: info}) );
         }
       });
-
       // 状态
       var state = {
         drafted:'草稿',
@@ -135,7 +136,14 @@ isLogin();
     $('#slug').on('input',function(){
       $('#strong').text($(this).val()||'slug');
     })
-
+    // 本地预览
+    $('#feature').on('change',function(){
+      var file=this.files[0];
+      var url=URL.createObjectURL(file);
+      $('#img').attr('src',url).show();
+    })
+    // 时间格式化
+    $('#created').val(moment().format('YYYY-MM-DDTHH:mm'));
   </script>
 </body>
 </html>

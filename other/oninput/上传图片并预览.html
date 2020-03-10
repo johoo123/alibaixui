@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <input type="file" multiple accept="image/*">
+    <br>
+    <img src="" width='800' alt="" >
+    <script>
+        // 如果input选中了文件
+        document.querySelector('input').onchange=function(){
+            console.log(this.files);
+            // 获取文件
+            var file=this.files[0];//文件
+            // 通过文件 得到文件url地址----注意，使用URL创建文件的url地址
+            var url=URL.createObjectURL(file);
+            // 把地址赋值给img的src
+            document.querySelector('img').src=url;
+            
+        }
+    </script>
+</body>
+</html>

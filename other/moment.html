@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src='../assets/vendors/moment/moment.js'></script>
+</head>
+<body>
+    <input id="created" class="form-control" name="created" type="datetime-local">
+    <script>
+        var date=new Date();        
+        // document.getElementById('created').value=moment(date).format('YYYY-MM-DDTHH:mm');
+        document.querySelector('input').value = moment().format('YYYY-MM-DDTHH:mm:ss');
+    </script>
+</body>
+</html>
