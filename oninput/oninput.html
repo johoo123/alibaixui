@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <input type="text">
+    <h1></h1>
+    <script>
+        // h5支持
+        document.querySelector('input').oninput = function () {
+            document.querySelector('h1').innerHTML = this.value
+            // 字数统计
+            document.querySelector('h1').innerHTML = '字数是'+this.value.length;
+        }
+    </script>
+</body>
+
+</html>

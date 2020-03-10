@@ -1,7 +1,7 @@
 <?php
-  
-  include_once '../fn.php';
-  isLogin();
+
+include_once '../fn.php';
+isLogin();
 ?>
 <!DOCTYPE html>
 <html lang="zh-CN">
@@ -13,6 +13,7 @@
   <link rel="stylesheet" href="../assets/vendors/nprogress/nprogress.css">
   <link rel="stylesheet" href="../assets/css/admin.css">
   <script src="../assets/vendors/nprogress/nprogress.js"></script>
+
 </head>
 <body>
   <script>NProgress.start()</script>
@@ -48,7 +49,7 @@
           <div class="form-group">
             <label for="slug">别名</label>
             <input id="slug" class="form-control" name="slug" type="text" placeholder="slug">
-            <p class="help-block">https://zce.me/post/<strong>slug</strong></p>
+            <p class="help-block">https://zce.me/post/<strong id='strong'>slug</strong></p>
           </div>
           <div class="form-group">
             <label for="feature">特色图像</label>
@@ -71,7 +72,6 @@
             <label for="status">状态</label>
             <select id="status" class="form-control" name="status">
               <option value="drafted">草稿</option>
-              <option value="published">已发布</option>
             </select>
           </div>
           <div class="form-group">
@@ -81,11 +81,61 @@
       </form>
     </div>
   </div>
+  <?php $page = 'post-add'?>
+  <?php include_once './inc/aside.php';?>
+<!-- 分类模版 -->
+<script type='text/html' id='tmp-cate'>
+    {{each list v i}}
+        <option value="{{v.id}}">{{v.name}}</option>
+    {{/each}}
+  </script>
+  <!-- 状态模版 -->
+  <script type="text/html" id="tmp-state">
+    {{each $data v k}}
+      <option value="{{k}}">{{v}}</option>
+    {{/each}}
+  </script>
 
-  <?php $page='post-add' ?>
-  <?php  include_once './inc/aside.php'; ?>
   <script src="../assets/vendors/jquery/jquery.js"></script>
   <script src="../assets/vendors/bootstrap/js/bootstrap.js"></script>
+  <!-- 引入template模版文件 -->
+  <script src="../assets/vendors/template/template-web.js"></script>
   <script>NProgress.done()</script>
+
+  <script>
+    //一、准备写文章页面
+    // 1. 分类下拉数据填充
+    // 2. 状态下拉数据填充
+    // 3. 别名同步
+    // 4. 默认时间设置
+    // 5. 图片本地预览
+    // 6. 富文本编辑器的使用
+      // 获取分类数据
+      $.ajax({
+        url: './category/cateGet.php',
+        dataType: 'json',
+        success:function (info) {
+          // console.log(info);    获取数据
+          //动态渲染
+          $('#category').html( template('tmp-cate', {list: info}) );
+        }
+      });
+
+      // 状态
+      var state = {
+        drafted:'草稿',
+        published: '已发布',
+        trashed: '回收站',
+        aa: 'bb',
+        cc: 'dd'
+      };
+    // 用模版进行渲染---注意：一定要核查是否是对应的模版id
+    $('#status').html(template('tmp-state', state));
+    // 别名同步完成
+    $('#slug').on('input',function(){
+      $('#strong').text($(this).val()||'slug');
+    })
+
+  </script>
 </body>
 </html>
