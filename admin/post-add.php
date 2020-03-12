@@ -34,7 +34,7 @@ isLogin();
       <!-- <div class="alert alert-danger">
         <strong>错误！</strong>发生XXX错误
       </div> -->
-      <form class="row">
+      <form class="row" action='./posts/postAdd.php' enctype="multipart/form-data" method='post'>
         <div class="col-md-9">
           <div class="form-group">
             <label for="title">标题</label>
@@ -42,7 +42,9 @@ isLogin();
           </div>
           <div class="form-group">
             <label for="content">标题</label>
-            <textarea id="content" class="form-control input-lg" name="content" cols="30" rows="10" placeholder="内容"></textarea>
+            <textarea id="content" class="form-control input-lg hide" name="content" cols="30" rows="10" placeholder="内容"></textarea>
+            <!-- 添加wangEditor的父容器 -->
+            <div id="content-box"></div>
           </div>
         </div>
         <div class="col-md-3">
@@ -103,6 +105,8 @@ isLogin();
   <!-- 引入moment -->
   <script src='../assets/vendors/moment/moment.js'></script>
   <script>NProgress.done()</script>
+  <!-- 引入富文本编辑器 -->
+  <script src='../assets/vendors/wangEditor/wangEditor.js'></script>
 
   <script>
     //一、准备写文章页面
@@ -144,6 +148,36 @@ isLogin();
     })
     // 时间格式化
     $('#created').val(moment().format('YYYY-MM-DDTHH:mm'));
+    // 富文本编辑器
+    // 1. 先隐藏文本域
+    // 2. 引入wangEditor.js
+    // 3. 添加wangEditor的父容器
+    // 4. 初始化
+    var E = window.wangEditor;
+    var editor = new E('#content-box');    
+    //让富文本和textarea同步
+    editor.customConfig.onchange = function (html) {
+        // 监控变化，同步更新到 textarea
+       $('#content').val(html);
+    };
+    editor.customConfig.menus  = [
+      'head',  // 标题
+      'bold',  // 粗体
+      'fontSize',  // 字号     
+      'underline',  // 下划线
+      'strikeThrough',  // 删除线
+      'foreColor',  // 文字颜色
+      'backColor',  // 背景颜色
+      'link',  // 插入链接
+      'list',  // 列表
+      'justify',  // 对齐方式     
+      'emoticon',  // 表情
+      'image',  // 插入图片
+      'code',  // 插入代码
+      'undo',  // 撤销
+      'redo'  // 重复
+    ];
+    editor.create();
   </script>
 </body>
 </html>

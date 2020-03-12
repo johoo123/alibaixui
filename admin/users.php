@@ -1,7 +1,9 @@
 <?php
-  
-  include_once '../fn.php';
-  isLogin();
+
+include_once '../fn.php';
+isLogin();
+//获取当前登录用户id
+$uid = $_SESSION['user_id'];
 ?>
 <!DOCTYPE html>
 <html lang="zh-CN">
@@ -14,7 +16,7 @@
   <link rel="stylesheet" href="../assets/css/admin.css">
   <script src="../assets/vendors/nprogress/nprogress.js"></script>
 </head>
-<body>
+<body data-id="<?php echo $uid ?>">
   <script>NProgress.start()</script>
 
   <div class="main">
@@ -54,7 +56,7 @@
               <label for="password">密码</label>
               <input id="password" class="form-control" name="password" type="text" placeholder="密码">
             </div>
-            <div class="form-group">              
+            <div class="form-group">
               <input class="btn btn-primary" type="button" value="添加">
             </div>
           </form>
@@ -89,30 +91,7 @@
                   <a href="javascript:;" class="btn btn-danger btn-xs">删除</a>
                 </td>
               </tr>
-              <tr>
-                <td class="text-center"><input type="checkbox"></td>
-                <td class="text-center"><img class="avatar" src="../assets/img/default.png"></td>
-                <td>i@zce.me</td>
-                <td>zce</td>
-                <td>汪磊</td>
-                <td>激活</td>
-                <td class="text-center">
-                  <a href="post-add.php" class="btn btn-default btn-xs">编辑</a>
-                  <a href="javascript:;" class="btn btn-danger btn-xs">删除</a>
-                </td>
-              </tr>
-              <tr>
-                <td class="text-center"><input type="checkbox"></td>
-                <td class="text-center"><img class="avatar" src="../assets/img/default.png"></td>
-                <td>i@zce.me</td>
-                <td>zce</td>
-                <td>汪磊</td>
-                <td>激活</td>
-                <td class="text-center">
-                  <a href="post-add.php" class="btn btn-default btn-xs">编辑</a>
-                  <a href="javascript:;" class="btn btn-danger btn-xs">删除</a>
-                </td>
-              </tr>
+
             </tbody>
           </table>
         </div>
@@ -120,10 +99,51 @@
     </div>
   </div>
 
-  <?php $page='users' ?>
-  <?php  include_once './inc/aside.php'; ?>
+<script type='text/html' id='tmp'>
+{{each list v i}}
+<tr >
+    <td class="text-center" data-id="{{v.id}}"><input type="checkbox"></td>
+    <td class="text-center"><img class="avatar" src="../{{v.avatar}}"></td>
+    <td>{{v.email}}</td>
+    <td>{{v.slug}}</td>
+    <td>{{v.nickname}}</td>
+    <td>{{v.status}}</td>
+    <td class="text-center" data-id="{{v.id}}">
+      <a href="post-add.php" class="btn btn-default btn-xs btn-edit">编辑</a>
+      {{if v.id!=uid}}
+        <a href="javascript:;" class="btn btn-danger btn-xs btn-del">删除</a>
+      {{/if}}
+    </td>
+</tr>
+{{/each}}
+</script>
+  <?php $page = 'users'?>
+  <?php include_once './inc/aside.php';?>
   <script src="../assets/vendors/jquery/jquery.js"></script>
   <script src="../assets/vendors/bootstrap/js/bootstrap.js"></script>
+  <!-- 引入template模版文件 -->
+  <script src="../assets/vendors/template/template-web.js"></script>
   <script>NProgress.done()</script>
+  <script>
+  // 获取uid
+  var uid=$('body').attr('data-id');
+  console.log(uid);
+    render();
+    // 获取用户
+    function render(){
+      $.ajax({
+        url:'./user/userGet.php',
+        dataType:'json',
+        success:function(info){
+          console.log(info);
+          var obj={
+            list:info,
+            uid:uid
+          }
+          $('tbody').html(template('tmp',obj))
+        }
+      })
+    }
+  </script>
 </body>
 </html>

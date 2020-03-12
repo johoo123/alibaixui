@@ -11,7 +11,7 @@ $start = ($page - 1) * $pageSize;
 $sql = "select posts.*, users.nickname, categories.name from posts  -- 查询基本数据
             join users on posts.user_id = users.id -- 连接用户表
             join categories on posts.category_id = categories.id -- 连接分类表
-            order by posts.id  -- 根据文章id进行排序
+            order by posts.id desc  -- 根据文章id进行排序
             limit $start, $pageSize -- 分页功能";
 
 //执行

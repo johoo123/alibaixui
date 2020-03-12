@@ -74,6 +74,7 @@ isLogin();
 
   <?php $page = 'posts'?>
   <?php include_once './inc/aside.php';?>
+  <?php include_once './inc/edit.php' ?>
   <script src="../assets/vendors/jquery/jquery.js"></script>
   <script src="../assets/vendors/bootstrap/js/bootstrap.js"></script>
   <!-- 引入template模版文件 -->
@@ -81,13 +82,15 @@ isLogin();
   <!-- 引入分页插件的js文件 -->
   <script src="../assets/vendors/pagination/jquery.pagination.js"></script>
   <script>NProgress.done()</script>
+  <script src="../assets/vendors/moment/moment.js"></script>
+  <script src="../assets/vendors/wangEditor/wangEditor.js"></script>
   <!-- 渲染文章的模版 -->
   <script type='text/html' id='tmp'>
     {{each list v i}}
           <tr>
             <td class="text-center"><input type="checkbox"></td>
             <td>{{v.title}}</td>
-            <td>{{v.author}}</td>
+            <td>{{v.nickname}}</td>
             <td>{{v.name}}</td>
             <td class="text-center">{{v.created}}</td>
             <td class="text-center">{{state[v.status]}}</td>
@@ -98,6 +101,20 @@ isLogin();
           </tr>
     {{/each}}
   </script>
+   <!-- 分类模版引擎 -->
+   <script type="text/html" id="tmp-cate">
+    {{ each $data.list v i }}
+      <option value="{{ v.id }}">{{ v.name }}</option>
+    {{ /each }}
+  </script>
+  <!-- 状态模版 -->
+
+  <script type="text/html" id="tmp-state">
+    {{ each $data v k }}
+      <option value="{{ k }}">{{ v  }}</option>
+    {{ /each }}
+  </script>
+
   <script>
     // 初始化状态
     var state={
@@ -118,6 +135,7 @@ isLogin();
         },
         dataType:'json',
         success:function(info){
+          // console.log(info);
           //渲染
           var obj={list:info,state:state}
           $('tbody').html( template('tmp', obj) );
@@ -169,7 +187,116 @@ isLogin();
         }
       })
     })
-    
+    //6-准备模态框的数据
+    // 填充分类下拉列表
+    $.ajax({
+      url: './category/cateGet.php',
+      dataType: 'json',
+      success:function (info) {
+        console.log(info);    //数组
+        //动态渲染
+        $('#category').html( template('tmp-cate', {list: info}) ); 
+      }
+    });
+    // 填充状态列表的
+    // 用模版进行渲染
+    $('#status').html(template('tmp-state', state));
+
+    // 别名同步
+    $('#slug').on('input', function () {
+      $('#strong').text($(this).val() || 'slug');
+    });
+
+    // 本地预览
+    $('#feature').on('change', function () {
+      //获取被选中文件
+      var file = this.files[0];
+      //通过文件的对应地址
+      var url = URL.createObjectURL(file);
+      //显示
+      $('#img').attr('src', url).show();
+    })
+   
+    // 时间格式化
+    $('#created').val( moment().format('YYYY-MM-DDTHH:mm')  );
+
+    // 准备富文本编辑器    
+    var E = window.wangEditor;
+    var editor = new E('#content-box');
+    //和textarea同步
+    editor.customConfig.onchange = function (html) {
+        // 监控变化，同步更新到 textarea
+       $('#content').val(html);
+    }
+    editor.create();
+    // 根据id返回文章
+    // 7-点击编辑按钮，去后台获取对应的文章数据，填充在模态框中
+    $('tbody').on('click', '.btn-edit', function () {
+      //获取id 
+      var id = $(this).parent().attr('data-id');
+      //获取数据
+      $.ajax({
+        url: './posts/postGetById.php',
+        data:{
+          id: id
+        },
+        dataType: 'json',
+        success: function (info) {
+          console.log(info);
+          //显示模态框
+          $('.edit-box').show();     
+          //向模态框中填充数据
+          // 标题
+          $('#title').val(info.title);
+          // 别名(strong标签也要修改)
+          $('#slug').val(info.slug);
+          $('#strong').text(info.slug);
+          // 图像（用img标签显示）
+          $('#img').attr('src', '../' + info.feature).show();
+          // 时间设置(注意格式)
+          $('#created').val(moment(info.created).format('YYYY-MM-DDTHH:mm'));
+          
+          // 文章内容设置(同时设置textarea  和 富文本编辑器 )
+          editor.txt.html(info.content)
+          $('#content').val(info.content);
+
+          // 分类选中(selected)
+          $('#category option[value='+ info.category_id+']').prop('selected', true);
+          // 状态选中(selected)
+          $('#status option[value='+ info.status +']').prop('selected', true);
+          // 设置id          
+          $('#id').val(info.id);     
+        }
+      })
+    });
+    // 8-放弃功能
+    $('#btn-cancel').click(function(){
+      $('.edit-box').hide();
+    })
+    // 9-提交编辑数据
+    $('#btn-update').click(function () {
+       //获取表单数据
+       var fd = new FormData( $('#editForm')[0] );
+       //FormData 
+      //  1-必须用post请方式
+      //  2-不能手动设置请求头
+       //上传
+       $.ajax({
+         url:'./posts/postUpdate.php',
+         type: 'post', 
+         data: fd,
+         contentType: false, //让$.ajax不设置content-Type属性
+         processData: false, //告诉$.ajax内部不需要去转换数据，因为数据已经有FormData进行处理
+         success: function (info) {
+          console.log(info);       
+          //隐藏模态框
+          $('.edit-box').hide();
+          //重新渲染当前页  
+          render(currentPage);
+         }
+       })
+    });
+
   </script>
 </body>
 </html>

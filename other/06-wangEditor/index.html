@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style> 
+        .box {
+            border: 1px solid red;
+            height: 400px;
+        }
+
+        textarea {
+            border: 1px solid green;
+            width: 500px;
+            height: 100px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 编辑器的父容器 -->
+    <div class="box" id="box"></div>
+    <textarea ></textarea>
+    <script src="./wangEditor.js"></script>
+    <script>        
+        var E = window.wangEditor;
+        var editor = new E('#box');
+        // 或者 var editor = new E( document.getElementById('editor') )
+
+        //设置内容
+        // editor.txt.html('呵呵呵');
+        // //获取内容
+        // alert( editor.txt.html());
+        //监听富文本内容变化的事件
+        editor.customConfig.onchange = function (html) {
+            //html 就是当前 富文本的内容
+            // 监控变化，同步更新到 textarea
+            document.querySelector('textarea').value = html;
+        }
+
+        //调用editor实例中的创建富文本编辑器方法 
+        editor.create();
+
+
+    </script>
+</body>
+</html>
